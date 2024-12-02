@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id        Int @id @default(autoincrement())
+  name      String
+  username  String @unique
+  password  String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model room {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  capacity  Int
+  resources resource[] @relation("room_resource")
+  schedules  schedule[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  room_resource room_resource[]
+}
+
+model teacher {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  subject   String
+  contact   String
+  schedules schedule[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+}
+
+model resource {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  rooms     room[] @relation("room_resource")
+  type      resource_type
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  room_resource room_resource[]
+}
+
+model schedule {
+  id          Int         @id @default(autoincrement())
+  room_id      Int
+  teacher_id   Int
+  startTime   DateTime
+  endTime     DateTime
+  shift       shift
+  day_of_week   day_of_week
+  room        room       @relation(fields: [room_id], references: [id])
+  teacher     teacher    @relation(fields: [teacher_id], references: [id])
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+
+  @@unique([room_id, day_of_week, shift])
+}
+
+model room_resource {
+  room_id    Int
+  resource_id Int
+  value       String
+  room       room @relation(fields: [room_id], references: [id])
+  resource   resource @relation(fields: [resource_id], references: [id])
+
+  @@id([room_id, resource_id])
+}
+
+enum shift {
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
+enum resource_type {
+  QUANTITY
+  AVAILABILITY
+}
+
+enum day_of_week {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+
+

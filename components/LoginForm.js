@@ -1,41 +1,46 @@
 "use client"
 
-import axios from "axios";
-import { useRouter } from 'next/navigation';
-import useAuth from '../app/hooks/useAuth';
+import { useRouter } from 'next/navigation';;
+import { Input, Button } from "@nextui-org/react";
+import { signIn } from 'next-auth/react';
+import {  useState } from "react";
 
 export default function LoginForm() {
-    const { valid, loading, error } = useAuth();
+    const [ user, setUser ] = useState({})
     const router = useRouter();
     
     async function login(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-
-        const data = {
-            username: formData.get("username"),
-            password: formData.get("password"),
-        };
-        axios.post('/api/auth/login', data)
-        router.push('/');
+        const response = await signIn('credentials', {
+            username: user.username,
+            password: user.password,
+            redirect: false,
+          });
+          if (!response?.error) {
+            router.push('/');
+            router.refresh();
+          }
     }
 
     return (
-    <form onSubmit={login} className="bg-secondary p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2">
-        <h2 className="font-bold text-sl mb-3">Sign in</h2>
-        <input
-        name="username"
-        type="text"
-        placeholder="username"
-        className="input input-primary w-full"
-        />
-        <input
-        name="password"
-        type="password"
-        placeholder="password"
-        className="input input-primary w-full"
-        />
-        <button className="btn btn-primary w-full">Login</button>
-      </form>
+        <div className='flex flex-col gap-3  justify-center min-w-80'>
+            <h2 className="font-bold text-sl mb-3">Sign in</h2>
+                <Input
+                name="username"
+                type="text"
+                placeholder="username"
+                className="input input-primary w-full"
+                value={user.username}
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
+                />
+                <Input
+                name="password"
+                type="password"
+                placeholder="password"
+                className="input input-primary w-full"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                />
+                <Button className="btn btn-primary w-full" onClick={() => login()}>Login</Button>
+          </div>
     );
 }

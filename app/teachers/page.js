@@ -13,50 +13,53 @@ import {
         ModalBody, 
         ModalFooter
       } from "@nextui-org/modal";
-import PageActions from '../../components/PageActions'
+import PageActions from '../../components/PageActions';
 
 function Rooms() {
-  const [rooms, setRooms] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [currentRoom, setCurrentRoom] = useState({ id: null, name: "", capacity: "" });
+  const [currentTeacher, setCurrentTeacher] = useState({ id: null, name: "", subject: "", contact: "" });
 
-  const handleOpenModal = (room = { id: null, name: "", capacity: "" }) => {
-    setCurrentRoom(room);
+
+  const handleOpenModal = (teacher = { id: null, name: "", subject: "", contact: "" }) => {
+    setCurrentTeacher(teacher);
     onOpen()
   };
 
   useEffect(() => {
-    axios.get('/api/rooms')
+    axios.get('/api/teachers')
       .then((response) => setRooms(response.data));
   }, []);
 
-  const handleAddRoom = async () => {
+  const handleAddTeacher = async () => {
     const response = await axios.post('/api/rooms', currentRoom);
-    const addedRoom = await response.json();
-    setRooms((prevRooms) => [...prevRooms, addedRoom]);
-    setCurrentRoom({ id: null, name: "", capacity: "" });
+    const addedTeacher = await response.json();
+    setTeachers((prevTeachers) => [...prevTeachers, addedTeacher]);
+    setCurrentTeacher({ id: null, name: "", capacity: "" });
     onOpenChange();
   };
-  
+
   return (
     <>
-    <PageActions>
-      <Button auto onClick={() => handleOpenModal()}>
-        Create Room
-      </Button>
-    </PageActions>
+      <PageActions>
+        <Button auto onClick={() => handleOpenModal()}>
+          Create Teacher
+        </Button>
+      </PageActions>
       <Spacer y={1} />
       <Table>
         <TableHeader>
-          <TableColumn>Room Name</TableColumn>
-          <TableColumn>Capacity</TableColumn>
+          <TableColumn>Name</TableColumn>
+          <TableColumn>Subject</TableColumn>
+          <TableColumn>Contact</TableColumn>
           <TableColumn>Actions</TableColumn>
         </TableHeader>
         <TableBody>
-          {rooms.map((room) => (
-            <TableRow key={room.id}>
-              <TableCell>{room.name}</TableCell>
-              <TableCell>{room.capacity}</TableCell>
+          {teachers.map((teacher) => (
+            <TableRow key={teacher.id}>
+              <TableCell>{teacher.name}</TableCell>
+              <TableCell>{teacher.subject}</TableCell>
+              <TableCell>{teacher.contact}</TableCell>
               <TableCell>
                 <Button
                   size="sm"
@@ -78,23 +81,31 @@ function Rooms() {
           <ModalContent>
           <ModalHeader>
             <h2 id="modal-title" size={18}>
-              {currentRoom.id ? "Edit Room" : "Add New Room"}
+              {currentTeacher.id ? "Edit Teacher" : "Add New Teacher"}
             </h2>
           </ModalHeader>
           <ModalBody>
             <Input
-              label="Room Name"
-              value={currentRoom.name}
-              onChange={(e) => setCurrentRoom({ ...currentRoom, name: e.target.value })}
+              label="Name"
+              value={currentTeacher.name}
+              onChange={(e) => setCurrentTeacher({ ...currentTeacher, name: e.target.value })}
               clearable
             />
             <Spacer y={1} />
             <Input
-              label="Capacity"
-              type="number"
-              value={currentRoom.capacity}
+              label="Subject"
+              value={currentTeacher.subject}
               onChange={(e) =>
-                setCurrentRoom({ ...currentRoom, capacity: Number(e.target.value) })
+                setCurrentTeacher({ ...currentTeacher, subject: e.target.value })
+              }
+              clearable
+            />
+            <Spacer y={1} />
+            <Input
+              label="Contact"
+              value={currentTeacher.contact}
+              onChange={(e) =>
+                setCurrentTeacher({ ...currentTeacher, contact: e.target.value })
               }
               clearable
             />
@@ -103,14 +114,13 @@ function Rooms() {
             <Button auto flat color="error" onClick={onOpenChange}>
               Cancel
             </Button>
-            <Button auto onClick={handleAddRoom}>
+            <Button auto onClick={handleAddTeacher}>
               Save
             </Button>
           </ModalFooter>
           </ModalContent>
         </Modal>
     </>
-
   );
 };
 

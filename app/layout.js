@@ -1,20 +1,12 @@
-import localFont from "next/font/local";
 import "./globals.css";
-import ProtectedPage from '../components/ProtectedPage';
-import Sidebar from '../components/Sidebar';
+import Providers from './providers';
 import Topmenu from '../components/Topmenu';
+import { Inter } from 'next/font/google'
+import { getServerSession } from 'next-auth';
+import { redirect } from "next/navigation";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
+const inter = Inter({ subsets: ['latin'] })
+const session = await getServerSession();
 export const metadata = {
   title: "Roomify",
   description: "",
@@ -26,16 +18,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <ProtectedPage>
-      <div className="flex min-h-screen bg-gray-100">
-          <Sidebar />
-          <div className="flex-grow flex flex-col">
-            <Topmenu />
-            <main className="flex-grow p-6 bg-primary-light">{children}</main>
-          </div>
-        </div>
-      </ProtectedPage>
+      <body className={`${inter.className}`}>
+      <Providers>
+        {session && <Topmenu />}
+          <main>
+            <div className="flex items-center flex-col justify-start min-h-screen gap-2 m-10">
+            {children}
+            </div>
+          </main>
+          <footer></footer>
+        </Providers>
       </body>
     </html>
   );

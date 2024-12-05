@@ -1,34 +1,27 @@
-// import { NextResponse } from 'next/server';
-// import jwt from 'jsonwebtoken';
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
+export async function middleware(req) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const { pathname } = req.nextUrl;
 
-export function middleware(req) {
-//   const token = req.cookies.get('token');
+  // Allow the `/login` page and public resources
+  if (pathname === "/login" || pathname.startsWith("/_next") || pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
 
-//   const url = req.nextUrl.pathname;
-//   if (url === '/api/auth/login') {
-//     return NextResponse.next();
-//   }
+  // Redirect to `/login` if token is not present
+  if (!token) {
+    const loginUrl = new URL("/login", req.url);
+    return NextResponse.redirect(loginUrl);
+  }
 
-//   if (!token) {
-//     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-//   }
+  return NextResponse.next();
+}
 
-//   try {
-//     jwt.verify(token.value, process.env.JWT_SECRET);
-//     console.log('entrei')
-//     const decoded = jwt.decode(token.value, process.env.JWT_SECRET);
-//     req.headers.set('cur-user', JSON.stringify(decoded))
-//     return NextResponse.next();
-//   } catch (error) {
-//     console.log(error)
-//     return NextResponse.json(
-//       { error: 'Invalid token. Please log in again.' },
-//       { status: 401 }
-//     );
-//   }
-// }
-
-// export const config = {
-//   matcher: ['/api/:path*'], // Apply middleware to all API routes
+export const config = {
+  matcher: [
+    // Match all routes except API routes and public resources
+    "/((?!_next|api|favicon.ico).*)",
+  ],
 };

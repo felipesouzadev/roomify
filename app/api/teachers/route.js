@@ -1,12 +1,10 @@
-import { prisma } from '../../../lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const teachers = await prisma.teacher.findMany({
-      include: {
-        schedules: true,  // Include schedules
-      },
-    });
+    const teachers = await prisma.teacher.findMany();
     return new Response(JSON.stringify(teachers), { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: 'Error fetching teachers' }), { status: 500 });
@@ -14,11 +12,11 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  const { name, subject } = await req.json();
+  const { name, subject, contact } = await req.json();
 
   try {
     const newTeacher = await prisma.teacher.create({
-      data: { name, subject },
+      data: { name, subject, contact },
     });
     return new Response(JSON.stringify(newTeacher), { status: 201 });
   } catch (error) {

@@ -1,4 +1,30 @@
 import {nextui} from '@nextui-org/theme'
+
+const lightTheme = {
+  colors: {
+    primary: "#6A0DAD", // Purple
+    secondary: "#D8BFD8", // Thistle
+    background: "#FFFFFF", // Light Background
+    text: "#3C3C3C", // Dark text
+  },
+};
+
+const darkTheme = {
+  colors: {
+    primary: "#9B30FF", // Amethyst Purple
+    secondary: "#800080", // Dark Purple
+    background: "#1E1E2C", // Dark Background
+    text: "#9B30FF", // Light text
+  },
+};
+
+const nextUiTheme = {
+  themes: {
+    dark: darkTheme,
+    light: lightTheme,
+  }
+}
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -6,14 +32,6 @@ export default {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)"],
-        mono: ["var(--font-mono)"],
-      },
-    },
-  },
-  darkMode: "class",
   plugins: [nextui()],
+  darkMode: "class",
 }

@@ -12,6 +12,7 @@ model users {
   name      String
   username  String @unique
   password  String
+  active   Boolean @default(true)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
@@ -53,16 +54,15 @@ model schedule {
   id          Int         @id @default(autoincrement())
   room_id      Int
   teacher_id   Int
-  startTime   DateTime
-  endTime     DateTime
+  start_date   DateTime
+  end_date     DateTime
   shift       shift
-  day_of_week   day_of_week
+  weekday     Int[]
   room        room       @relation(fields: [room_id], references: [id])
   teacher     teacher    @relation(fields: [teacher_id], references: [id])
   created_at   DateTime    @default(now())
   updated_at   DateTime    @updatedAt
 
-  @@unique([room_id, day_of_week, shift])
 }
 
 model room_resource {
@@ -85,16 +85,3 @@ enum resource_type {
   QUANTITY
   AVAILABILITY
 }
-
-enum day_of_week {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
-
-
-

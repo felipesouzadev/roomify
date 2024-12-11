@@ -4,15 +4,13 @@ CREATE TYPE "shift" AS ENUM ('MORNING', 'AFTERNOON', 'EVENING');
 -- CreateEnum
 CREATE TYPE "resource_type" AS ENUM ('QUANTITY', 'AVAILABILITY');
 
--- CreateEnum
-CREATE TYPE "day_of_week" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -58,10 +56,10 @@ CREATE TABLE "schedule" (
     "id" SERIAL NOT NULL,
     "room_id" INTEGER NOT NULL,
     "teacher_id" INTEGER NOT NULL,
-    "startTime" TIMESTAMP(3) NOT NULL,
-    "endTime" TIMESTAMP(3) NOT NULL,
+    "start_date" TIMESTAMP(3) NOT NULL,
+    "end_date" TIMESTAMP(3) NOT NULL,
     "shift" "shift" NOT NULL,
-    "day_of_week" "day_of_week" NOT NULL,
+    "weekday" INTEGER[],
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -96,9 +94,6 @@ CREATE UNIQUE INDEX "teacher_name_key" ON "teacher"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "resource_name_key" ON "resource"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "schedule_room_id_day_of_week_shift_key" ON "schedule"("room_id", "day_of_week", "shift");
 
 -- CreateIndex
 CREATE INDEX "_room_resource_B_index" ON "_room_resource"("B");

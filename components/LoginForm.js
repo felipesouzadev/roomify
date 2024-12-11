@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';;
 import { Input, Button } from "@nextui-org/react";
+import { Form } from "@nextui-org/form";
 import { signIn } from 'next-auth/react';
 import {  useState } from "react";
 
@@ -9,7 +10,8 @@ export default function LoginForm() {
     const [ user, setUser ] = useState({})
     const router = useRouter();
     
-    async function login(e) {
+    const handleLogin = async (e) => {
+        e.preventDefault();
         const response = await signIn('credentials', {
             username: user.username,
             password: user.password,
@@ -22,7 +24,7 @@ export default function LoginForm() {
     }
 
     return (
-        <div className='flex flex-col gap-3  justify-center min-w-80'>
+        <Form validationBehavior="native"  onSubmit={handleLogin} className="flex flex-col gap-3 justify-center min-w-80 p-80" >
             <h2 className="font-bold text-sl mb-3">Sign in</h2>
                 <Input
                 name="username"
@@ -40,7 +42,7 @@ export default function LoginForm() {
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 />
-                <Button className="btn btn-primary w-full" onClick={() => login()}>Login</Button>
-          </div>
+                <Button type="submit" className="btn btn-primary w-full">Login</Button>
+          </Form>
     );
 }

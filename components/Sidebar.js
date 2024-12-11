@@ -14,16 +14,13 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-primary text-secondary flex flex-col">
-      <div className="h-16 flex items-center justify-center text-2xl font-bold">
-        Roomify
-      </div>
+    <div className="w-64 flex h-screen flex-col p-4 border-r divide-x-reservre md:w-60 md-flex">
       <nav className="flex-grow">
         {navigation.map((item) => (
           <Link
             href={item.href}
             key={item.name}
-            className={`rounded-sm block px-4 py-3 hover:bg-primary-light ${
+            className={`rounded-sm block px-4 py-3 hover:bg-primary-light text-center ${
               pathname === item.href ? "bg-primary-dark" : ""
             }`}
           >
@@ -31,6 +28,6 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
-    </aside>
+    </div>
   );
 }

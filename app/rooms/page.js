@@ -3,19 +3,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-        Button, Input, Spacer,
-        useDisclosure
-       } from "@nextui-org/react";
-import {
-        Modal, 
-        ModalContent, 
-        ModalHeader, 
-        ModalBody, 
-        ModalFooter
-      } from "@nextui-org/modal";
+        Button, Input, Spacer, useDisclosure } from "@nextui-org/react";
+import { Modal,  ModalContent,  ModalHeader,  ModalBody,  ModalFooter } from "@nextui-org/modal";
 import PageActions from '../../components/PageActions'
+import PageWrapper from '../../components/PageWrapper'
 
-function Rooms() {
+export default function Rooms() {
   const [rooms, setRooms] = useState([]);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [currentRoom, setCurrentRoom] = useState({ id: null, name: "", capacity: "" });
@@ -32,21 +25,20 @@ function Rooms() {
 
   const handleAddRoom = async () => {
     const response = await axios.post('/api/rooms', currentRoom);
-    const addedRoom = await response.json();
+    const addedRoom = response.data;
     setRooms((prevRooms) => [...prevRooms, addedRoom]);
     setCurrentRoom({ id: null, name: "", capacity: "" });
     onOpenChange();
   };
   
   return (
-    <>
-    <PageActions>
-      <Button auto onClick={() => handleOpenModal()}>
-        Create Room
-      </Button>
-    </PageActions>
-      <Spacer y={1} />
-      <Table>
+    <PageWrapper>
+      <PageActions>
+        <Button auto onClick={() => handleOpenModal()}>
+          Create Room
+        </Button>
+      </PageActions>
+      <Table isStriped>
         <TableHeader>
           <TableColumn>Room Name</TableColumn>
           <TableColumn>Capacity</TableColumn>
@@ -109,9 +101,6 @@ function Rooms() {
           </ModalFooter>
           </ModalContent>
         </Modal>
-    </>
-
+    </PageWrapper>
   );
 };
-
-export default Rooms;

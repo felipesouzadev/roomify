@@ -1,12 +1,12 @@
 import "./globals.css";
 import Providers from './providers';
 import Topmenu from '../components/Topmenu';
+import Sidebar from '../components/Sidebar';
 import { Inter } from 'next/font/google'
 import { getServerSession } from 'next-auth';
-import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ['latin'] })
-const session = await getServerSession();
+
 export const metadata = {
   title: "Roomify",
   description: "",
@@ -15,18 +15,20 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({children }) {
+  const session = await getServerSession();
   return (
-    <html lang="en">
-      <body className={`${inter.className}`}>
-      <Providers>
-        {session && <Topmenu />}
-          <main>
-            <div className="flex items-center flex-col justify-start min-h-screen gap-2 m-10">
-            {children}
+    <html lang="en" suppressHydrationWarning >
+      <body className={`${inter.className} bg-background text-foreground`}>
+        <Providers>
+            {session && <Topmenu />}
+            <div className="flex">
+              {session && <Sidebar />}
+              <main className="flex flex-row justify-center w-full h-full">
+                  {children}
+              </main>
             </div>
-          </main>
-          <footer></footer>
+            <footer></footer>
         </Providers>
       </body>
     </html>

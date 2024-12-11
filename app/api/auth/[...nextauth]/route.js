@@ -19,7 +19,6 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials, req) {
-        console.log('ENTREI')
         const { username, password } = credentials
         const user = await prisma.users.findUnique({
           where: { username },

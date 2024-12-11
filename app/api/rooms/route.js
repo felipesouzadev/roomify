@@ -7,7 +7,6 @@ export async function GET() {
     const rooms = await prisma.room.findMany();
     return new Response(JSON.stringify(rooms), { status: 200 });
   } catch (error) {
-    console.log(error)
     return new Response(JSON.stringify({ error: 'Error fetching rooms' }), { status: 500 });
   }
 }
@@ -18,10 +17,8 @@ export async function POST(req) {
     const newRoom = await prisma.room.create({
       data: { name, capacity },
     });
-    console.log(newRoom)
     return new Response(JSON.stringify(newRoom), { status: 201 });
   } catch (error) {
-    console.log(error)
     return new Response(JSON.stringify({ error: 'Error creating room' }), { status: 500 });
   }
 }

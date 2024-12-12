@@ -18,48 +18,40 @@ import PageWrapper from '../../components/PageWrapper';
 import EditIcon from '../../components/Icons/EditIcon'
 import TrashIcon from '../../components/Icons/TrashIcon'
 
-function Teachers() {
-  const [teachers, setTeachers] = useState([]);
+export default function Users() {
+  const [users, setUsers] = useState([]);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onOpenChange: onOpenDeleteChange} = useDisclosure();
-  const [currentTeacher, setCurrentTeacher] = useState({ id: null, name: "", subject: "", contact: "" });
+  const [currentUser, setCurrentUser] = useState({ id: null, name: "", username: "" });
 
 
-  const handleOpenModal = (teacher = { id: null, name: "", subject: "", contact: "" }) => {
-    setCurrentTeacher(teacher);
+  const handleOpenModal = (user = { id: null, name: "", username: ""}) => {
+    setCurrentUser(user);
     onOpen()
   };
 
-  const handleDeleteTeacher = async () => {
-    await axios.delete(`/api/teachers/${currentTeacher.id}`);
-    setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.id !== currentTeacher.id));
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
-    onOpenDeleteChange();
-  }
-
-  const handleEditTeacher = async () => {
-    const response = await axios.put(`/api/teachers/${currentTeacher.id}`, currentTeacher);
-    const updatedTeacher = response.data;
-    setTeachers((prevTeachers) => prevTeachers.map((teacher) => (teacher.id === updatedTeacher.id ? updatedTeacher : teacher)));
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
-    onOpenChange();
-  }
-
-  const handleOpenDeleteModal = (teacher) => {
-    setCurrentTeacher(teacher);
-    onDeleteOpen();
-   }
+    const handleDeleteUser = async () => {
+      await axios.delete(`/api/users/${currentUser.id}`);
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== user.id));
+      setCurrentUser({ id: null, name: "", username: "" });
+      onOpenDeleteChange();
+    }
+  
+    const handleOpenDeleteModal = (user) => {
+      setCurrentUser(user);
+      onDeleteOpen();
+     }
 
   useEffect(() => {
-    axios.get('/api/teachers')
-      .then((response) => setTeachers(response.data));
+    axios.get('/api/users')
+      .then((response) => setUsers(response.data));
   }, []);
 
-  const handleAddTeacher = async () => {
-    const response = await axios.post('/api/teachers', currentTeacher);
-    const addedTeacher = response.data;
-    setTeachers((prevTeachers) => [...prevTeachers, addedTeacher]);
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
+  const handleAddUser = async () => {
+    const response = await axios.post('/api/users', currentUser);
+    const addedUser = response.data;
+    setUsers((prevUsers) => [...prevUsers, addedUser]);
+    setCurrentUser({ id: null, name: "", username: "" });
     onOpenChange();
   };
 
@@ -67,29 +59,27 @@ function Teachers() {
     <PageWrapper>
       <PageActions>
         <Button color="primary" auto onClick={() => handleOpenModal()}>
-          Create Teacher
+          Create User
         </Button>
       </PageActions>
       <Spacer y={1} />
       <Table isStriped classNames={{wrapper: "bg-background", th: "text-primary", td: "text-primary", tr: "even:"}}>
         <TableHeader>
           <TableColumn>Name</TableColumn>
-          <TableColumn>Subject</TableColumn>
-          <TableColumn>Contact</TableColumn>
+          <TableColumn>Username</TableColumn>
           <TableColumn>Actions</TableColumn>
         </TableHeader>
         <TableBody>
-          {teachers.map((teacher) => (
-            <TableRow key={teacher.id}>
-              <TableCell>{teacher.name}</TableCell>
-              <TableCell>{teacher.subject}</TableCell>
-              <TableCell>{teacher.contact}</TableCell>
+          {users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{`${user.name}${user.isOwner ? ' - OWNER' : ''}`}</TableCell>
+              <TableCell>{user.username}</TableCell>
               <TableCell>
                 <Button 
                   color="primary"
                   size="sm"
                   variant="light"
-                  onClick={() => handleOpenModal(teacher)}
+                  onClick={() => handleOpenModal(user)}
                 >
                   <EditIcon/>
                 </Button>
@@ -97,7 +87,8 @@ function Teachers() {
                   color="primary"
                   size="sm"
                   variant="light"
-                  onClick={() => handleOpenDeleteModal(teacher)}
+                  isDisabled={user.isOwner}
+                  onClick={() => handleOpenDeleteModal(user)}
                 >
                   <TrashIcon/>
                 </Button>
@@ -114,43 +105,47 @@ function Teachers() {
           <ModalContent>
               <ModalHeader>
                 <h2 className="text-primary" id="modal-title" size={18}>
-                  {currentTeacher.id ? "Edit Teacher" : "Add New Teacher"}
+                  {currentUser.id ? "Edit User" : "Add New User"}
                 </h2>
               </ModalHeader>
               <ModalBody>
                 <Input
                   color="primary"
                   label="Name"
-                  value={currentTeacher.name}
-                  onChange={(e) => setCurrentTeacher({ ...currentTeacher, name: e.target.value })}
+                  value={currentUser.name}
+                  onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
                   clearable
                 />
                 <Spacer y={1} />
                 <Input
                   color="primary"
-                  label="Subject"
-                  value={currentTeacher.subject}
+                  disabled={currentUser.id}
+                  label="Username"
+                  value={currentUser.username}
                   onChange={(e) =>
-                    setCurrentTeacher({ ...currentTeacher, subject: e.target.value })
+                    setCurrentUser({ ...currentUser, username: e.target.value })
                   }
                   clearable
                 />
                 <Spacer y={1} />
-                <Input
+                {currentUser && !currentUser.id  && (
+                  <Input
                   color="primary"
-                  label="Contact"
-                  value={currentTeacher.contact}
+                  label="Password"
+                  type='password'
+                  value={currentUser.password}
                   onChange={(e) =>
-                    setCurrentTeacher({ ...currentTeacher, contact: e.target.value })
+                    setCurrentUser({ ...currentUser, password: e.target.value })
                   }
                   clearable
                 />
+                )}
               </ModalBody>
               <ModalFooter>
                 <Button auto flat color="error" onClick={onOpenChange}>
                   Cancel
                 </Button>
-                <Button auto  color="primary" onClick={currentTeacher.id ? handleEditTeacher : handleAddTeacher}>
+                <Button auto  color="primary" onClick={handleAddUser}>
                   Save
                 </Button>
               </ModalFooter>
@@ -161,17 +156,17 @@ function Teachers() {
         <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              Delete Teacher
+              Delete User
             </h2>
           </ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete {currentTeacher.name}?</p>
+            <p>Are you sure you want to delete {currentUser.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
               Cancel
             </Button>
-            <Button color="warning" auto onClick={handleDeleteTeacher}>
+            <Button color="warning" auto onClick={handleDeleteUser}>
               Delete
             </Button>
           </ModalFooter>
@@ -180,5 +175,3 @@ function Teachers() {
     </PageWrapper>
   );
 };
-
-export default Teachers;

@@ -1,14 +1,20 @@
 "use client"
+import { Card, CardHeader, CardBody, CardFooter, Button } from "@nextui-org/react";
 
-import { Button } from "@nextui-org/react";
+
+
 export default function Room({room, setSelectedRoom}) {
     return (
-        <div className="flex flex-col gap-2 border p-2 rounded-lg min-w-52 max-w-52">
-            <div className="flex-row">
-                <h1>Sala: {room.name}</h1>
-                <h2>Capacity: {room.capacity}</h2>
-            </div>
-            <Button className="self-end" onClick={() => setSelectedRoom(room)}>Schedule</Button>
-        </div>  
+        <Card className="min-w-60 max-w-60 bg-secondary">
+            <CardHeader className="flex">
+                <h1>{room.name}</h1>
+            </CardHeader>
+            <CardBody>
+            <p>Capacity: {room.capacity}</p>
+            </CardBody>
+            <CardFooter className="flex flex-row-reverse">
+                <Button color="primary" className="self-end" onClick={() => setSelectedRoom(room)}>Schedule</Button>
+            </CardFooter>
+        </Card>  
     )
 }

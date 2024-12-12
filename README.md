@@ -13,7 +13,7 @@
 
 ## Resumo do Projeto
 <div style="text-align: justify">
-O projeto Roomify visa desenvolver uma aplicação web para otimizar a gestão da alocação de salas e turmas em instituições de ensino, oferecendo uma solução prática e eficiente para a administração acadêmica. A crescente complexidade no gerenciamento de horários, recursos físicos e necessidades de turmas torna o processo de alocação desafiador. Esta aplicação busca resolver essas dificuldades, ppor meio de uma ferramenta que permita o controle dinâmico do uso das salas, com funcionalidades de cadastro, consulta, edição e exclusão de dados (CRUD), além de uma interface intuitiva para visualização de cronogramas. A escolha deste projeto originou-se pela necessidade de modernização e automatização de processos administrativos em instituições de ensino, onde o uso de planilhas e métodos manuais se mostra ineficiente e propenso a erros. Com o Roomify, espera-se otimizar o uso dos espaços disponíveis, garantindo maior organização e agilidade na gestão acadêmica.
+O projeto Roomify visa desenvolver uma aplicação web para otimizar a gestão da alocação de salas e turmas em instituições de ensino, oferecendo uma solução prática e eficiente para a administração acadêmica. A crescente complexidade no gerenciamento de horários, recursos físicos e necessidades de turmas torna o processo de alocação desafiador. Esta aplicação busca resolver essas dificuldades, por meio de uma ferramenta que permita o controle dinâmico do uso das salas, com funcionalidades de cadastro, consulta, edição e exclusão de dados (CRUD), além de uma interface intuitiva para visualização de cronogramas. A escolha deste projeto originou-se pela necessidade de modernização e automatização de processos administrativos em instituições de ensino, onde o uso de planilhas e métodos manuais se mostra ineficiente e propenso a erros. Com o Roomify, espera-se otimizar o uso dos espaços disponíveis, garantindo maior organização e agilidade na gestão acadêmica.
 </div>
 
 ## Definição do Problema
@@ -31,6 +31,8 @@ A aplicação Roomify busca otimizar o processo de alocação de salas em instit
 - Node.js
 - React.js
 - Next.js
+- Prisma
+- NextUI
 - PostgresSQL
 - TailwindCSS
 

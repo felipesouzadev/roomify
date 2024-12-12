@@ -19,7 +19,7 @@ export default async function RootLayout({children }) {
   const session = await getServerSession();
   return (
     <html lang="en" suppressHydrationWarning >
-      <body className={`${inter.className} bg-background text-foreground`}>
+      <body className={`${inter.className} bg-background`}>
         <Providers>
             {session && <Topmenu />}
             <div className="flex">

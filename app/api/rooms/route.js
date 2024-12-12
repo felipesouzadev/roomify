@@ -1,51 +1,64 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const rooms = await prisma.room.findMany();
-    return new Response(JSON.stringify(rooms), { status: 200 });
+    const rooms = await prisma.room.findMany({include:{roomResources: {include: {resource: true}}}});
+    return Response.json(rooms, { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error fetching rooms' }), { status: 500 });
+    return Response.json({ error: 'Error fetching rooms' }, { status: 500 });
   }
 }
 
 export async function POST(req) {
-  const { name, capacity } = await req.json();
+  const { name, capacity, resources } = await req.json();
+
+  const roomResources = await Promise.all(
+    resources.map(async (resource) => {
+      if (resource.id) {
+        return {
+            resourceId:  resource.id,
+            value: resource.value ? String(resource.value) : "1",
+        }
+      } else {
+        const existingResource = await prisma.resource.findFirst({  where: { name: resource.name } });
+        if (existingResource) {
+          return {
+              resourceId: existingResource.id,
+              value: resource.value ? String(resource.value) : "1"
+          };
+        }
+        const createdResource = await prisma.resource.create({
+          data: { name: resource.name, type: resource.type },
+        });
+        return {
+            resourceId: createdResource.id,
+            value: resource.value ? String(resource.value) : "1",
+        };
+      }
+    })
+  );
+
   try {
     const newRoom = await prisma.room.create({
-      data: { name, capacity },
+      data: {
+        name,
+        capacity,
+        roomResources: {
+          create: roomResources,
+        },
+      },
+      include: {
+        roomResources: {
+          include: {
+            resource: true,
+          },
+        },
+      },
     });
-    return new Response(JSON.stringify(newRoom), { status: 201 });
+    return Response.json(newRoom, { status: 201 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error creating room' }), { status: 500 });
-  }
-}
-
-export async function PUT(req) {
-  const { id, name, capacity } = await req.json();
-
-  try {
-    const updatedRoom = await prisma.room.update({
-      where: { id },
-      data: { name, capacity },
-    });
-    return new Response(JSON.stringify(updatedRoom), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error updating room' }), { status: 500 });
-  }
-}
-
-export async function DELETE(req) {
-  const { id } = await req.json();
-
-  try {
-    await prisma.room.delete({
-      where: { id },
-    });
-    return new Response(null, { status: 204 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error deleting room' }), { status: 500 });
+    return Response.json({ error: 'Error creating room' }, { status: 500 });
   }
 }

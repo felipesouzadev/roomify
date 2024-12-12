@@ -5,6 +5,6 @@ import {signOut} from 'next-auth/react';
 
 export default function Logout() {
     return (
-        <Button onClick={() => signOut()}>Logout</Button>
+        <Button color="primary" onClick={() => signOut()}>Logout</Button>
     )
 }

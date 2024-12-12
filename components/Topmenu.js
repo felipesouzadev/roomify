@@ -1,6 +1,6 @@
 "use client"
 
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownItem, DropdownTrigger, DropdownMenu} from "@nextui-org/react";
 import MoonIcon from '../components/Icons/MoonIcon';
 import SunIcon from '../components/Icons/SunIcon';
 import Logout from '../components/Logout';
@@ -16,20 +16,32 @@ export default function Topmenu() {
             <NavbarBrand >
               <p className="font-bold text-inherit">ROOMIFY</p>
             </NavbarBrand>
-            <NavbarItem>
-              <button
+          </NavbarContent>
+          <NavbarContent as="div" justify="end">
+          <NavbarItem>
+          <Button variant="light"
                   onClick={() => {
                     setTheme(resolvedTheme === "light" ? "dark" : "light");
                   }}
                   type='button'
                   className='rounded-md p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>
                   {theme === "light" ? <MoonIcon/> : <SunIcon/> }
-              </button>
-            </NavbarItem>
-            <NavbarItem className="hidden lg:flex">
+          </Button>
+          </NavbarItem>
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Button color="primary">
+              My Account
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="settings" href="/users" >Manager Users</DropdownItem>
+            <DropdownItem key="logout">
               <Logout/>
-            </NavbarItem>
-          </NavbarContent>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
         </Navbar>
   );
 }

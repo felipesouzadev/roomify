@@ -12,76 +12,78 @@ model users {
   name      String
   username  String @unique
   password  String
-  active   Boolean @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  isActive  Boolean @default(true) @map("is_active")
+  isOwner Boolean @default(false) @map("is_owner")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
 }
 
 model room {
   id        Int @id @default(autoincrement())
   name      String @unique
   capacity  Int
-  resources resource[] @relation("room_resource")
   schedules  schedule[]
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
 
-  room_resource room_resource[]
+  roomResources RoomResource[]
 }
 
 model teacher {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
+  name      String
   subject   String
   contact   String
   schedules schedule[]
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
 }
 
 model resource {
   id        Int @id @default(autoincrement())
   name      String @unique
-  rooms     room[] @relation("room_resource")
-  type      resource_type
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-
-  room_resource room_resource[]
+  type      ResourceType
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  roomResources RoomResource[]
 }
 
 model schedule {
   id          Int         @id @default(autoincrement())
-  room_id      Int
-  teacher_id   Int
-  start_date   DateTime
-  end_date     DateTime
+  roomId      Int @map("room_id")
+  teacherId  Int  @map("teacher_id")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
   shift       shift
   weekday     Int[]
-  room        room       @relation(fields: [room_id], references: [id])
-  teacher     teacher    @relation(fields: [teacher_id], references: [id])
-  created_at   DateTime    @default(now())
-  updated_at   DateTime    @updatedAt
+  room        room       @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  teacher     teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
 
 }
 
-model room_resource {
-  room_id    Int
-  resource_id Int
+model RoomResource {
+  id          Int    @id @default(autoincrement()) @map("id")
+  roomId      Int @map("room_id")
+  resourceId  Int  @map("resource_id")
   value       String
-  room       room @relation(fields: [room_id], references: [id])
-  resource   resource @relation(fields: [resource_id], references: [id])
+  room       room @relation(fields: [roomId], references: [id])
+  resource   resource @relation(fields: [resourceId], references: [id])
 
-  @@id([room_id, resource_id])
+  @@unique([roomId, resourceId])
+  @@map("room_resource")
 }
 
 enum shift {
   MORNING
   AFTERNOON
-  EVENING
+  NIGHT
 }
 
-enum resource_type {
+enum ResourceType {
   QUANTITY
   AVAILABILITY
+
+  @@map("resource_type")
 }

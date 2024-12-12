@@ -13,6 +13,7 @@ async function seedUsers(prisma) {
       username,
       name: 'Admin',
       password: hashedPassword,
+      isOwner: true,
     },
   });
 

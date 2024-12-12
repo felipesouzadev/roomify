@@ -4,11 +4,15 @@ import { useRouter } from 'next/navigation';;
 import { Input, Button } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
 import { signIn } from 'next-auth/react';
-import {  useState } from "react";
+import { useState } from "react";
+import EyeFilledIcon from "./Icons/EyeFilledIcon";
+import EyeSlashFilledIcon from "./Icons/EyeSlashFilledIcon";
 
 export default function LoginForm() {
     const [ user, setUser ] = useState({})
+    const [isVisible, setIsVisible] = useState(false);
     const router = useRouter();
+    const toggleVisibility = () => setIsVisible(!isVisible);
     
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -36,7 +40,21 @@ export default function LoginForm() {
                 />
                 <Input
                 name="password"
-                type="password"
+                type={isVisible ? 'text' : 'password'}
+                endContent={
+                    <button
+                      aria-label="toggle password visibility"
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
                 placeholder="password"
                 className="input input-primary w-full"
                 value={user.password}

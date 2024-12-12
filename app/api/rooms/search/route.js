@@ -8,7 +8,12 @@ export async function GET(req) {
   const endDate = queryParameters.get('endDate');
   const shift = queryParameters.get('shift');
   const capacity = queryParameters.get('capacity');
-  const weekday = queryParameters.get('weekday').split(",").map(Number);
+  const weekday = queryParameters.get('weekday').trim().split(",").map(Number);
+  const resources = queryParameters.get('resources') ? queryParameters.get('resources').trim().split(",").map(Number) : [];
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999);
 
   if (!startDate || !endDate || !shift || !capacity || !weekday) {
     return new  Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
@@ -22,19 +27,31 @@ export async function GET(req) {
             none: {
               AND: [
                 {
-                  start_date: { lte: new Date(startDate) },
-                  end_date: { gte: new Date(endDate) },
+                  startDate: { lte: start },
+                  endDate: { gte: end },
                   shift: shift.toUpperCase(),
                   weekday: {hasSome: weekday}
                 }
               ]
             },
           },
+          roomResources: {
+            some: {
+              resourceId: { in: resources },
+            },
         },
+      },
+      include: {
+        roomResources: {
+          include: {
+            resource: true, // Include resource details
+          },
+        },
+      },
       });
 
-    return new Response(JSON.stringify(availableRooms), { status: 200 });
+    return Response.json(availableRooms, { status: 200 });
   } catch (error) {
-    return new  Response(JSON.stringify({ message: "Internal server error" }), { status: 500 });
+    return  Response.json({ message: "Internal server error" }, { status: 500 });
   }
 }

@@ -29,8 +29,9 @@ export default function LoginForm() {
 
     return (
         <Form validationBehavior="native"  onSubmit={handleLogin} className="flex flex-col gap-3 justify-center min-w-80 p-80" >
-            <h2 className="font-bold text-sl mb-3">Sign in</h2>
+            <h2 className="font-bold text-sl mb-3 text-primary">Sign in</h2>
                 <Input
+                color="primary"
                 name="username"
                 type="text"
                 placeholder="username"
@@ -39,6 +40,7 @@ export default function LoginForm() {
                 onChange={(e) => setUser({ ...user, username: e.target.value })}
                 />
                 <Input
+                color="primary"
                 name="password"
                 type={isVisible ? 'text' : 'password'}
                 endContent={
@@ -60,7 +62,7 @@ export default function LoginForm() {
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 />
-                <Button type="submit" className="btn btn-primary w-full">Login</Button>
+                <Button type="submit" color="primary" className="btn btn-primary w-full">Login</Button>
           </Form>
     );
 }

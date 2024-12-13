@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import PageWrapper from '../../components/PageWrapper';
 import GetCurrentWeek from "../utils/GetCurrentWeek";
 import PageActions from "../../components/PageActions";
+require('moment/locale/pt-br.js')
 
 export default function Schedule(){
     const localizer = momentLocalizer(moment);
@@ -135,7 +136,7 @@ export default function Schedule(){
             color="primary"
             id="filterType"
             value={filterType}
-            label="Filter"
+            label="Filtro"
             labelPlacement="outside"
             className="rounded max-w-28"
             size="sm"
@@ -200,6 +201,14 @@ export default function Schedule(){
               onRangeChange={(start, end) => {handleDatesChange(start, end)}}
               onSelectEvent={(event) => handleOpenDeleteModal(event)}
               step={60}
+              messages={{
+                next: "Prox",
+                previous: "Ant",
+                today: "Hoje",
+                month: "Mês",
+                week: "Semana",
+                day: "Dia"
+              }}
             />
         </Card>
 

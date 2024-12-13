@@ -5,6 +5,8 @@ import MoonIcon from '../components/Icons/MoonIcon';
 import SunIcon from '../components/Icons/SunIcon';
 import Logout from '../components/Logout';
 import { useTheme } from "next-themes";
+import Image from 'next/image';
+import logo from '../media/logo.png';
 
 export default function Topmenu() {
 
@@ -12,9 +14,9 @@ export default function Topmenu() {
 
   return (
         <Navbar shouldHideOnScroll isBordered maxWidth="full">
-          <NavbarContent  justify="start" >
+          <NavbarContent justify="start" >
             <NavbarBrand >
-              <p className="font-bold text-primary">ROOMIFY</p>
+            <Image src={logo} width={60} height={60}/>
             </NavbarBrand>
           </NavbarContent>
           <NavbarContent as="div" justify="end">

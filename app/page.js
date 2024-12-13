@@ -17,25 +17,25 @@ export default function HomePage() {
   const [resources, setResources] = useState([]);
   const [capacity, setCapacity] = useState("");
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [selectedRoom, setSelectedRoom] = useState(null)
+  const [selectedRoom, setSelectedRoom] = useState({name: ''})
   const [teachers, setTeachers] = useState([]);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [availableRooms, setAvailableRooms] = useState([]);
-  const availableShifts = [{key: "MORNING", label: "Morning"},
-                           {key: "AFTERNOON", label: "Afternoon"},
-                           {key: "NIGHT", label: "Night"}];
-  const availableWeekday = [{key: 1, label: "Monday"},
-                              {key: 2, label: "Tuesday"},
-                              {key: 3, label: "Wednesday"},
-                              {key: 4, label: "Thursday"},
-                              {key: 5, label: "Friday"},
-                              {key: 6, label: "Saturday"},
-                              {key: 0, label: "Sunday"}];
+  const availableShifts = [{key: "MORNING", label: "Manhã"},
+                           {key: "AFTERNOON", label: "Tarde"},
+                           {key: "NIGHT", label: "Noite"}];
+  const availableWeekday = [{key: 1, label: "Segunda"},
+                              {key: 2, label: "Terça"},
+                              {key: 3, label: "Quarta"},
+                              {key: 4, label: "Quinta"},
+                              {key: 5, label: "Sexta"},
+                              {key: 6, label: "Sábado"},
+                              {key: 0, label: "Domingo"}];
   const [availableResources, setAvailableResources] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
-    if(selectedRoom){
+    if(selectedRoom && selectedRoom.id){
       onOpenChange();
     }
 
@@ -55,7 +55,7 @@ export default function HomePage() {
   }
 
   const setBlankState = () => {
-    setSelectedRoom(null);
+    setSelectedRoom({name: ''});
     setSelectedTeacher(null);
   }
 
@@ -72,12 +72,11 @@ export default function HomePage() {
       const data = await response.data;
       setIsLoading(false);
       if(data.length === 0){
-        alert("No rooms wre found.");
+        alert("Nenhuma sala encontrada.");
       }
       setAvailableRooms(data);
     } catch (error) {
-      console.error("Error searching rooms:", error);
-      alert("An error occurred while searching for rooms.");
+      alert("Opa! algo errado aconteceu! tente novamente.");
     }
   };
 
@@ -94,19 +93,18 @@ export default function HomePage() {
                                                           });
       const data = await response.data;
       setAvailableRooms(availableRooms.filter(room => room.id !== selectedRoom.id));
-      alert("Successfully scheduled room");
+      alert("Sala agendada com sucesso!");
       onOpenChange();
       setBlankState();
     } catch (error) {
-      console.error("Error searching rooms:", error);
-      alert("An error occurred while scheduling.");
+      alert("Opa! Algo deu errado! Tente novamente.");
     }
   };
 
   return (
       <PageWrapper>
         <div className="flex">
-        <h1 className="text-2xl font-bold mb-4 align-baseline text-primary">Search Available Rooms</h1>
+        <h1 className="text-2xl font-bold mb-4 align-baseline text-primary">Buscar Salas Disponíveis</h1>
           <PageActions>
             <Form validationBehavior="native" className="flex flex-row items-center" onSubmit={handleSearch}>
                     <Input
@@ -119,7 +117,7 @@ export default function HomePage() {
                       className="rounded max-w-36"
                       isRequired
                       labelPlacement="outside"
-                      label="Start Date"
+                      label="Inicio"
                     />
                     <Input
                       size="lg"
@@ -131,7 +129,7 @@ export default function HomePage() {
                       className="rounded max-w-36"
                       isRequired
                       labelPlacement="outside"
-                      label="End Date"
+                      label="Fim"
                     />
                     <Select
                       color="primary"
@@ -142,7 +140,7 @@ export default function HomePage() {
                       className="rounded min-w-32"
                       isRequired
                       labelPlacement="outside"
-                      label="Shift"
+                      label="Turno"
                     >
                       {availableShifts.map((shift) => (
                         <SelectItem className="bg-background text-primary" key={shift.key}>{shift.label}</SelectItem>
@@ -158,7 +156,7 @@ export default function HomePage() {
                       className="rounded min-w-32 max-w-32"
                       isRequired
                       selectionMode="multiple"
-                      label="Weekday"
+                      label="Dia da semana"
                     >
                       {availableWeekday.map((weekday) => (
                         <SelectItem className="bg-background text-primary" key={weekday.key}>{weekday.label}</SelectItem>
@@ -172,10 +170,9 @@ export default function HomePage() {
                       value={capacity}
                       onChange={(e) => setCapacity(Math.max(1, Number(e.target.value)) )}
                       className="rounded min-w-32 max-w-32"
-                      placeholder="Capacity"
                       isRequired
                       labelPlacement="outside"
-                      label="Capacity"
+                      label="Capacidade"
                     />
                     <Select
                       size="lg"
@@ -186,14 +183,14 @@ export default function HomePage() {
                       onChange={(e) => setResources(e.target.value)}
                       className="rounded min-w-32 max-w-32"
                       selectionMode="multiple"
-                      label="Resources"
+                      label="Recursos"
                     >
                       {availableResources.map((resource) => (
                         <SelectItem className="bg-background text-primary" key={resource.id}>{resource.name}</SelectItem>
                       ))}
                     </Select>
                     <Button isLoading={isLoading}  spinnerPlacement="end" size="lg" color="primary" type="submit" className="min-w-32 rounded self-end">
-                      Search
+                      Buscar
                     </Button>
             </Form>
           </PageActions>
@@ -203,7 +200,7 @@ export default function HomePage() {
           <div className="flex flex-row w-full">
             {availableRooms.length > 0 && (
               <div className="flex flex-col mt-6 gap-4 w-full">
-                <h2 className="text-xl font-semibold text-primary">Found Rooms</h2>
+                <h2 className="text-xl font-semibold text-primary">Salas encontradas:</h2>
                 <Divider/>
                 <div className="flex flex-row flex-wrap gap-6">
                   {availableRooms.map((room) => (
@@ -221,6 +218,7 @@ export default function HomePage() {
         >
           <ModalContent>
             <ModalHeader>
+              <p className="primary bold" >Escolha o professor para o qual deseja agendar a sala : {selectedRoom.name}</p>
             </ModalHeader>
             <ModalBody>
               <Select
@@ -232,7 +230,7 @@ export default function HomePage() {
                 className="w-full px-3 py-2 rounded"
                 isRequired
                 labelPlacement="outside"
-                label="Teacher"
+                label="Professor"
               >
                 {teachers.map((teacher) => (
                     <SelectItem className="bg-background text-primary" key={teacher.id}>{teacher.name}</SelectItem>
@@ -241,10 +239,10 @@ export default function HomePage() {
             </ModalBody>
             <ModalFooter>
               <Button auto flat color="error" onClick={closeModal}>
-                Cancel
+                Cancelar
               </Button>
               <Button color="primary" auto onClick={handleScheduleRoom}>
-                Confirm
+                Confirmar
               </Button>
             </ModalFooter>
           </ModalContent>

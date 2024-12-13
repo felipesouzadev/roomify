@@ -7,7 +7,7 @@ import SelectResouce from './SelectResouce'
 
 export default function SelectResources({selectedResources, setSelectedResources, deleteResource}) {
     const [availableResources, setAvailableResources] = useState([]);
-    const availableTypes = [{key: "QUANTITY", value: "Quantity"}, {key: "AVAILABILITY", value: "Availability"}];
+    const availableTypes = [{key: "QUANTITY", value: "Quantidade"}, {key: "AVAILABILITY", value: "Dispnibilidade"}];
     useEffect(() => {
         axios.get('/api/resources')
           .then((response) => setAvailableResources(response.data));
@@ -21,7 +21,7 @@ export default function SelectResources({selectedResources, setSelectedResources
     return (
       <>
       <div className="flex flex-row justify-between">
-        <h2>Resources</h2>
+        <h2>Recursos:</h2>
         <Button onClick={addResource} variant="light" className="h-6 w-6">
           <AddIcon/>
         </Button>

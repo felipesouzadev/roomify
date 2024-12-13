@@ -53,7 +53,7 @@ export default function SelectResources({ availableResources, availableTypes, se
                 onInputChange={(value) => updateResourceValue(value)}
                 onFocusChange={(changed) => updateResourceValue(selectedResource.name)}
                 className="rounded max-w-32"
-                label="Resources"
+                label="Recursos"
                 >
               {availableResources.map((availableResource) => (
                 <AutocompleteItem value={availableResource.name} key={JSON.stringify(availableResource)}>{availableResource.name}</AutocompleteItem>

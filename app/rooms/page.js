@@ -32,7 +32,7 @@ export default function Rooms() {
       setCurrentRoom({ id: null, name: "", capacity: "" });
       onOpenDeleteChange();
     } catch (error) {
-      alert("Error deleting room");
+      alert("Opa! Ocorreu um erro ao deletar a sala");
     }
   }
 
@@ -45,7 +45,7 @@ export default function Rooms() {
       setCurrentRoom({ id: null, name: "", capacity: "" });
       onOpenChange();
     } catch (error) {
-      alert("Error updating room");
+      alert("Opa! Ocorreu um erro ao atualizar a sala");
     }
   }
 
@@ -80,7 +80,7 @@ export default function Rooms() {
       setCurrentRoom({ id: null, name: "", capacity: "" });
       onOpenChange();
     } catch(error) {
-      alert("Error creating room");
+      alert("Opa! Ocorreu um erro ao adicionar a sala");
     }
   };
   
@@ -88,15 +88,15 @@ export default function Rooms() {
     <PageWrapper>
       <PageActions>
         <Button color="primary" auto onClick={() => handleOpenModal()}>
-          Create Room
+          Criar Sala
         </Button>
       </PageActions>
       <Skeleton isLoaded={isLoaded}>
       <Table layout="fixed" isStriped classNames={{wrapper: "bg-background", th: "text-primary text-bold font-lg", td: "text-primary"}}>
         <TableHeader>
-          <TableColumn>Room Name</TableColumn>
-          <TableColumn>Capacity</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn>Nome</TableColumn>
+          <TableColumn>Capacidade</TableColumn>
+          <TableColumn>Ações</TableColumn>
         </TableHeader>
         <TableBody>
           {rooms.map((room) => (
@@ -127,7 +127,6 @@ export default function Rooms() {
       </Table>
       </Skeleton>
 
-
       <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
@@ -136,13 +135,13 @@ export default function Rooms() {
           <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              {currentRoom.id ? "Edit Room" : "Add New Room"}
+              {currentRoom.id ? "Editar Sala" : "Criar Sala"}
             </h2>
           </ModalHeader>
           <ModalBody>
             <Input
               color="primary"
-              label="Room Name"
+              label="Nome"
               value={currentRoom.name}
               onChange={(e) => setCurrentRoom({ ...currentRoom, name: e.target.value })}
               clearable
@@ -150,7 +149,7 @@ export default function Rooms() {
             <Spacer y={1} />
             <Input
               color="primary"
-              label="Capacity"
+              label="Capacidade"
               type="number"
               value={currentRoom.capacity}
               onChange={(e) =>
@@ -162,10 +161,10 @@ export default function Rooms() {
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenChange}>
-              Cancel
+              Cancelar
             </Button>
             <Button color="primary" auto onClick={currentRoom.id ? handleEditRoom : handleAddRoom}>
-              Save
+              Salvar
             </Button>
           </ModalFooter>
           </ModalContent>
@@ -175,18 +174,18 @@ export default function Rooms() {
         <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              Delete Room
+              Deletar Sala
             </h2>
           </ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete {currentRoom.name}?</p>
+            <p>Você tem certeza que deseja deletar a sala {currentRoom.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
-              Cancel
+              Cancelar
             </Button>
             <Button color="danger" auto onClick={handleDeleteRoom}>
-              Delete
+              Deletar
             </Button>
           </ModalFooter>
         </ModalContent>

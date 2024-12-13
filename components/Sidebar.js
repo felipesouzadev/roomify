@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { Card } from "@nextui-org/react";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Rooms", href: "/rooms" },
-  { name: "Teachers", href: "/teachers" },
-  { name: "Schedule", href: "/schedule" },
+  { name: "Agendar", href: "/" },
+  { name: "Salas", href: "/rooms" },
+  { name: "Professores", href: "/teachers" },
+  { name: "Agenda", href: "/schedule" },
 ];
 
 export default function Sidebar() {

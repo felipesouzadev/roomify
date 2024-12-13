@@ -79,7 +79,7 @@ export default function Schedule(){
         setSelectedEvent({name: ''});
         onOpenDeleteChange();
       } catch (error) {
-        alert("Error deleting event");
+        alert("Opa! Ocorreu um erro ao deletar o evento");
       }
     }
 
@@ -128,7 +128,7 @@ export default function Schedule(){
     return (
       <PageWrapper>
         <div className="flex">
-        <h1 color="primary" className="text-3xl font-bold text-center mb-4">Schedule</h1>
+        <h1 color="primary" className="text-3xl font-bold text-center text-primary mb-4">Agenda</h1>
           <PageActions>
             <div className="flex justify-end w-full items-end gap-3">
             <Select
@@ -140,8 +140,8 @@ export default function Schedule(){
             className="rounded max-w-28"
             size="sm"
             onChange={(e) => setFilterType(e.target.value)}>
-              <SelectItem key="teacher">Teacher</SelectItem>
-              <SelectItem key="room">Room</SelectItem>
+              <SelectItem key="teacher">Professor</SelectItem>
+              <SelectItem key="room">Sala</SelectItem>
             </Select>
             {filterType === "teacher" && (
               <Select
@@ -207,18 +207,18 @@ export default function Schedule(){
         <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              Delete Event
+              Deletar Evento
             </h2>
           </ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete event {selectedEvent.title}?</p>
+            <p>Você tem certeza que deseja deletar o evento {selectedEvent.title}?</p>
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
-              Cancel
+              Cancelar
             </Button>
             <Button color="danger" auto onClick={handleDeleteEvent}>
-              Delete
+              Deletar
             </Button>
           </ModalFooter>
         </ModalContent>

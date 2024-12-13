@@ -59,15 +59,15 @@ export default function Users() {
     <PageWrapper>
       <PageActions>
         <Button color="primary" auto onClick={() => handleOpenModal()}>
-          Create User
+          Criar Usuário
         </Button>
       </PageActions>
       <Spacer y={1} />
       <Table isStriped classNames={{wrapper: "bg-background", th: "text-primary", td: "text-primary", tr: "even:"}}>
         <TableHeader>
-          <TableColumn>Name</TableColumn>
-          <TableColumn>Username</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn>Nome</TableColumn>
+          <TableColumn>Usuário</TableColumn>
+          <TableColumn>Ações</TableColumn>
         </TableHeader>
         <TableBody>
           {users.map((user) => (
@@ -105,13 +105,13 @@ export default function Users() {
           <ModalContent>
               <ModalHeader>
                 <h2 className="text-primary" id="modal-title" size={18}>
-                  {currentUser.id ? "Edit User" : "Add New User"}
+                  {currentUser.id ? "Editar Usuário" : "Criar novo User"}
                 </h2>
               </ModalHeader>
               <ModalBody>
                 <Input
                   color="primary"
-                  label="Name"
+                  label="Nome"
                   value={currentUser.name}
                   onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
                   clearable
@@ -120,7 +120,7 @@ export default function Users() {
                 <Input
                   color="primary"
                   disabled={currentUser.id}
-                  label="Username"
+                  label="Usuário"
                   value={currentUser.username}
                   onChange={(e) =>
                     setCurrentUser({ ...currentUser, username: e.target.value })
@@ -131,7 +131,7 @@ export default function Users() {
                 {currentUser && !currentUser.id  && (
                   <Input
                   color="primary"
-                  label="Password"
+                  label="Senha"
                   type='password'
                   value={currentUser.password}
                   onChange={(e) =>
@@ -143,10 +143,10 @@ export default function Users() {
               </ModalBody>
               <ModalFooter>
                 <Button auto flat color="error" onClick={onOpenChange}>
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button auto  color="primary" onClick={handleAddUser}>
-                  Save
+                  Salvar
                 </Button>
               </ModalFooter>
           </ModalContent>
@@ -156,18 +156,18 @@ export default function Users() {
         <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              Delete User
+              Deletar Usuário
             </h2>
           </ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete {currentUser.name}?</p>
+            <p>Você tem certeza que deseja deletar o usuário {currentUser.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
-              Cancel
+              Cancelar
             </Button>
             <Button color="danger" auto onClick={handleDeleteUser}>
-              Delete
+              Deletar
             </Button>
           </ModalFooter>
         </ModalContent>

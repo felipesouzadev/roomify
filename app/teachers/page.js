@@ -37,7 +37,7 @@ function Teachers() {
       setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
       onOpenDeleteChange();
     } catch (error){
-      alert('Error deleting teacher');
+      alert('Opaa! Ocorreu um erro ao deletar o professor');
     }
   }
 
@@ -49,7 +49,7 @@ function Teachers() {
       setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
       onOpenChange();
     } catch (error) {
-      alert('Error updating teacher');
+      alert('Opa! Ocorreu um erro ao atualizar o professor');
     }
   }
 
@@ -74,7 +74,7 @@ function Teachers() {
       setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
       onOpenChange();
     } catch (error) {
-      alert('Error adding teacher');
+      alert('Opa! Ocorreu um erro ao adicionar o professor');
     }
   };
 
@@ -82,17 +82,17 @@ function Teachers() {
     <PageWrapper>
       <PageActions>
         <Button color="primary" auto onClick={() => handleOpenModal()}>
-          Create Teacher
+          Criar Professor
         </Button>
       </PageActions>
       <Spacer y={1} />
       <Skeleton isLoaded={isLoaded}>
       <Table isStriped classNames={{wrapper: "bg-background", th: "text-primary", td: "text-primary", tr: "even:"}}>
         <TableHeader>
-          <TableColumn>Name</TableColumn>
-          <TableColumn>Subject</TableColumn>
-          <TableColumn>Contact</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn>Nome</TableColumn>
+          <TableColumn>Matéria</TableColumn>
+          <TableColumn>Contato</TableColumn>
+          <TableColumn>Ações</TableColumn>
         </TableHeader>
         <TableBody>
           {teachers.map((teacher) => (
@@ -131,13 +131,13 @@ function Teachers() {
           <ModalContent>
               <ModalHeader>
                 <h2 className="text-primary" id="modal-title" size={18}>
-                  {currentTeacher.id ? "Edit Teacher" : "Add New Teacher"}
+                  {currentTeacher.id ? "Editar Professor" : "Criar Professor"}
                 </h2>
               </ModalHeader>
               <ModalBody>
                 <Input
                   color="primary"
-                  label="Name"
+                  label="Nome"
                   value={currentTeacher.name}
                   onChange={(e) => setCurrentTeacher({ ...currentTeacher, name: e.target.value })}
                   clearable
@@ -145,7 +145,7 @@ function Teachers() {
                 <Spacer y={1} />
                 <Input
                   color="primary"
-                  label="Subject"
+                  label="Matéria"
                   value={currentTeacher.subject}
                   onChange={(e) =>
                     setCurrentTeacher({ ...currentTeacher, subject: e.target.value })
@@ -155,7 +155,7 @@ function Teachers() {
                 <Spacer y={1} />
                 <Input
                   color="primary"
-                  label="Contact"
+                  label="Contato"
                   value={currentTeacher.contact}
                   onChange={(e) =>
                     setCurrentTeacher({ ...currentTeacher, contact: e.target.value })
@@ -165,10 +165,10 @@ function Teachers() {
               </ModalBody>
               <ModalFooter>
                 <Button auto flat color="error" onClick={onOpenChange}>
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button auto  color="primary" onClick={currentTeacher.id ? handleEditTeacher : handleAddTeacher}>
-                  Save
+                  Salvar
                 </Button>
               </ModalFooter>
           </ModalContent>
@@ -178,11 +178,11 @@ function Teachers() {
         <ModalContent>
           <ModalHeader>
             <h2 className="text-primary" id="modal-title" size={18}>
-              Delete Teacher
+              Deletar Professor
             </h2>
           </ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete {currentTeacher.name}?</p>
+            <p>Você tem certeza que deseja deletar o professor {currentTeacher.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button auto flat color="error" onClick={onOpenDeleteChange}>

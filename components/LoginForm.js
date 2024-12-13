@@ -25,7 +25,7 @@ export default function LoginForm() {
             router.push('/');
             router.refresh();
           } else {
-            alert('Error signing in check your credentials');
+            alert('Opa! Ocorreu um erro ao fazer login');
           }
     }
 
@@ -36,7 +36,7 @@ export default function LoginForm() {
                 color="primary"
                 name="username"
                 type="text"
-                placeholder="username"
+                placeholder="Usuário"
                 className="input input-primary w-full"
                 value={user.username}
                 onChange={(e) => setUser({ ...user, username: e.target.value })}
@@ -59,7 +59,7 @@ export default function LoginForm() {
                       )}
                     </button>
                   }
-                placeholder="password"
+                placeholder="Senha"
                 className="input input-primary w-full"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}

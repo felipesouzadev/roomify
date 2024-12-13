@@ -31,11 +31,11 @@ export default function Topmenu() {
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Button color="primary">
-              My Account
+              Gestão
             </Button>
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="settings" href="/users" >Manager Users</DropdownItem>
+            <DropdownItem key="settings" href="/users" >Gerenciar Usários</DropdownItem>
             <DropdownItem key="logout">
               <Logout/>
             </DropdownItem>

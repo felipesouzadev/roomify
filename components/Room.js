@@ -15,7 +15,7 @@ export default function Room({room, setSelectedRoom}) {
                     <Divider color="primary" />
                     <div className="flex flex-wrap gap-2 overflow-auto w-full h-full">
                         {room.roomResources.map((roomResource) => (
-                            <Chip size="sm" color="primary" key={roomResource.id}>{roomResource.resource.name}</Chip>
+                            <Chip size="sm" color="primary" key={roomResource.id}>{`${roomResource.resource.name} ${roomResource.resource.type === 'QUANTITY' ? ' - '+ roomResource.value : ''}`}</Chip>
                         ))}
                     </div>
                     </div>

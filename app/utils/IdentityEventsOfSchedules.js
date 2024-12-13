@@ -11,7 +11,7 @@ export default async function IdentifyEventsOfSchedules(schedules, start, end) {
         const shiftTimes = shiftTimeMapping[schedule.shift];
 
         let currentDate = new Date(start);
-        while (currentDate <= end && currentDate <= schedule.endDate) {
+        while (currentDate <= end && currentDate >= schedule.startDate && currentDate <= schedule.endDate) {
           if (scheduleWeekday.includes(currentDate.getDay())) {
             const eventStart = new Date(currentDate);
             eventStart.setHours(shiftTimes.startHour, 0, 0, 0);

@@ -50,7 +50,7 @@ A arquitetura proposta é baseada no modelo MVC (Model-View-Controller), uma abo
 
 ![screenshot](media/mvc.png)
 <div style="text-align: justify">
-A camada de modelo, responsável pela lógica de dados e regras de negócio; a camada de visão, que gerencia a interface com o usuário; e a camada de controle, que atua como intermediária entre o modelo labie a visão. Essa estrutura modular facilita a manutenção e a reutilização do código, além de simplificar sua implantação.
+A camada de modelo, responsável pela lógica de dados e regras de negócio; a camada de visão, que gerencia a interface com o usuário; e a camada de controle, que atua como intermediária entre o modelo e a visão. Essa estrutura modular facilita a manutenção e a reutilização do código, além de simplificar sua implantação.
 </div>
 
   

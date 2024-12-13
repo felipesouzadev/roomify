@@ -68,8 +68,8 @@ model RoomResource {
   roomId      Int @map("room_id")
   resourceId  Int  @map("resource_id")
   value       String
-  room       room @relation(fields: [roomId], references: [id])
-  resource   resource @relation(fields: [resourceId], references: [id])
+  room       room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  resource   resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 
   @@unique([roomId, resourceId])
   @@map("room_resource")

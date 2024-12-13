@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Card, Select, SelectItem, Switch } from "@nextui-org/react";
+import { Card, Modal, ModalHeader, ModalBody, ModalContent, ModalFooter, useDisclosure, Button} from "@nextui-org/react";
 import axios from "axios"
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -16,10 +16,29 @@ export default function Schedule(){
     const [endDate, setEndDate] = useState(friday);
     const [filteredDates, setFilteredDates] = useState([]);
     const currentDate = new Date();
+    const [selectedEvent, setSelectedEvent] = useState({title: ''});
+    const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onOpenChange: onOpenDeleteChange} = useDisclosure();
+
+    const handleOpenDeleteModal = (event) => {
+      console.log(event)
+      setSelectedEvent(event);
+      onDeleteOpen();
+    }
 
     const handleDatesChange = (range, start, end) => {
       setStartDate(range[0].toISOString().split('T')[0]);
       setEndDate(range[range.length - 1].toISOString().split('T')[0]);
+    }
+
+    const handleDeleteEvent = async () => {
+      try {
+        await axios.delete(`/api/events/${selectedEvent.id}`);
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== selectedEvent.id));
+        setSelectedEvent({name: ''});
+        onOpenDeleteChange();
+      } catch (error) {
+        alert("Error deleting event");
+      }
     }
 
     const customSlotPropGetter = (date) => {
@@ -82,9 +101,31 @@ export default function Schedule(){
               slotPropGetter={customSlotPropGetter}
               dayPropGetter={customDayPropGetter}
               onRangeChange={(start, end) => {handleDatesChange(start, end)}}
+              onSelectEvent={(event) => handleOpenDeleteModal(event)}
               step={60}
             />
         </Card>
+
+        <Modal isOpen={isDeleteOpen} onOpenChange={onOpenDeleteChange} className="bg-background">
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-primary" id="modal-title" size={18}>
+              Delete Event
+            </h2>
+          </ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to delete event {selectedEvent.title}?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button auto flat color="error" onClick={onOpenDeleteChange}>
+              Cancel
+            </Button>
+            <Button color="danger" auto onClick={handleDeleteEvent}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       </PageWrapper>
     );
   };

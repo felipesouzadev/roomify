@@ -16,7 +16,6 @@ export async function DELETE(req, {params}) {
         return Response.json(deletedRoom, {status: 200});
 
       } catch (error) {
-        console.error('Error deleting resource:', error);
         if (error.code === 'P2025') { 
           return Response.json({ error: 'Resource not found' }, { status: 404 });
         }

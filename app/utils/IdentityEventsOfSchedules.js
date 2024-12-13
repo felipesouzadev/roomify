@@ -22,11 +22,11 @@ export default async function IdentifyEventsOfSchedules(schedules, start, end) {
             const title = `${schedule.teacher.name} - ${schedule.room.name}`;
   
             events.push({
+              id: `room${schedule.room.id}-teacher${schedule.teacher.id}-weekday${currentDate.getDay()}-shift${schedule.shift}`,
               title,
               start: eventStart,
               end: eventEnd,
               allDay: false,
-              resourceId: `room${schedule.room.id}-teacher${schedule.teacher.id}`,
             });
           }
           currentDate.setDate(currentDate.getDate() + 1);

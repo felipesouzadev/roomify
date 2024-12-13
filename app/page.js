@@ -32,6 +32,7 @@ export default function HomePage() {
                               {key: 6, label: "Saturday"},
                               {key: 0, label: "Sunday"}];
   const [availableResources, setAvailableResources] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     if(selectedRoom){
@@ -42,7 +43,10 @@ export default function HomePage() {
 
   useEffect(() => {
       axios.get('/api/resources')
-        .then((response) => setAvailableResources(response.data));
+        .then((response) => {
+          setAvailableResources(response.data)
+          setIsLoaded(true);
+        });
     }, []);
 
   const closeModal = () => {
@@ -63,8 +67,13 @@ export default function HomePage() {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const response = await axios.get(`/api/rooms/search?startDate=${startDate}&endDate=${endDate}&shift=${shift}&capacity=${capacity}&weekday=${weekday}&resources=${resources}`);
       const data = await response.data;
+      setIsLoading(false);
+      if(data.length === 0){
+        alert("No rooms wre found.");
+      }
       setAvailableRooms(data);
     } catch (error) {
       console.error("Error searching rooms:", error);
@@ -75,6 +84,7 @@ export default function HomePage() {
   const handleScheduleRoom = async (e) => {
     e.preventDefault();
     try {
+      isLoading = true;
       const response = await axios.post(`/api/schedule`, { teacherId: Number(selectedTeacher),
                                                            roomId: Number(selectedRoom.id),
                                                            shift,
@@ -97,91 +107,96 @@ export default function HomePage() {
       <PageWrapper>
         <div className="flex">
         <h1 className="text-2xl font-bold mb-4 align-baseline text-primary">Search Available Rooms</h1>
-        <PageActions>
-        <Form validationBehavior="native" className="flex flex-row items-baseline" onSubmit={handleSearch}>
-                <Input
-                  color="primary"
-                  type="date"
-                  id="start-date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 rounded"
-                  isRequired
-                  labelPlacement="outside"
-                  label="Start Date"
-                />
-                 <Input
-                  color="primary"
-                  type="date"
-                  id="end-date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 rounded"
-                  isRequired
-                  labelPlacement="outside"
-                  label="End Date"
-                />
-                <Select
-                  color="primary"
-                  id="shift"
-                  value={shift}
-                  onChange={(e) => setShift(e.target.value)}
-                  className="w-full  px-3 py-2 rounded"
-                  isRequired
-                  labelPlacement="outside"
-                  label="Shift"
-                >
-                  {availableShifts.map((shift) => (
-                    <SelectItem className="bg-background text-primary" key={shift.key}>{shift.label}</SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  color="primary"
-                  id="weekday"
-                  labelPlacement="outside"
-                  value={weekday}
-                  onChange={(e) => setWeekday(e.target.value)}
-                  className="w-full  px-3 py-2 rounded"
-                  isRequired
-                  selectionMode="multiple"
-                  label="Weekday"
-                >
-                  {availableWeekday.map((weekday) => (
-                    <SelectItem className="bg-background text-primary" key={weekday.key}>{weekday.label}</SelectItem>
-                  ))}
-                </Select>
-                <Input
-                  color="primary"
-                  type="number"
-                  id="capacity"
-                  value={capacity}
-                  onChange={(e) => setCapacity(e.target.value)}
-                  className="w-full px-3 py-2 rounded"
-                  placeholder="Capacity"
-                  isRequired
-                  labelPlacement="outside"
-                  label="Capacity"
-                />
-                <Select
-                  color="primary"
-                  id="resources"
-                  labelPlacement="outside"
-                  value={resources}
-                  onChange={(e) => setResources(e.target.value)}
-                  className="w-full  px-3 py-2 rounded"
-                  isRequired
-                  selectionMode="multiple"
-                  label="Resources"
-                >
-                  {availableResources.map((resource) => (
-                    <SelectItem className="bg-background text-primary" key={resource.id}>{resource.name}</SelectItem>
-                  ))}
-                </Select>
-                <Button color="primary" type="submit" className="px-4 py-2 rounded">
-                  Search
-                </Button>
+          <PageActions>
+            <Form validationBehavior="native" className="flex flex-row items-center" onSubmit={handleSearch}>
+                    <Input
+                      size="lg"
+                      color="primary"
+                      type="date"
+                      id="start-date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="rounded max-w-36"
+                      isRequired
+                      labelPlacement="outside"
+                      label="Start Date"
+                    />
+                    <Input
+                      size="lg"
+                      color="primary"
+                      type="date"
+                      id="end-date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="rounded max-w-36"
+                      isRequired
+                      labelPlacement="outside"
+                      label="End Date"
+                    />
+                    <Select
+                      color="primary"
+                      size="lg"
+                      id="shift"
+                      value={shift}
+                      onChange={(e) => setShift(e.target.value)}
+                      className="rounded min-w-32"
+                      isRequired
+                      labelPlacement="outside"
+                      label="Shift"
+                    >
+                      {availableShifts.map((shift) => (
+                        <SelectItem className="bg-background text-primary" key={shift.key}>{shift.label}</SelectItem>
+                      ))}
+                    </Select>
+                    <Select
+                      color="primary"
+                      size="lg"
+                      id="weekday"
+                      labelPlacement="outside"
+                      value={weekday}
+                      onChange={(e) => setWeekday(e.target.value)}
+                      className="rounded min-w-32 max-w-32"
+                      isRequired
+                      selectionMode="multiple"
+                      label="Weekday"
+                    >
+                      {availableWeekday.map((weekday) => (
+                        <SelectItem className="bg-background text-primary" key={weekday.key}>{weekday.label}</SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      color="primary"
+                      size="lg"
+                      type="number"
+                      id="capacity"
+                      value={capacity}
+                      onChange={(e) => setCapacity(Math.max(1, Number(e.target.value)) )}
+                      className="rounded min-w-32 max-w-32"
+                      placeholder="Capacity"
+                      isRequired
+                      labelPlacement="outside"
+                      label="Capacity"
+                    />
+                    <Select
+                      size="lg"
+                      color="primary"
+                      id="resources"
+                      labelPlacement="outside"
+                      value={resources}
+                      onChange={(e) => setResources(e.target.value)}
+                      className="rounded min-w-32 max-w-32"
+                      selectionMode="multiple"
+                      label="Resources"
+                    >
+                      {availableResources.map((resource) => (
+                        <SelectItem className="bg-background text-primary" key={resource.id}>{resource.name}</SelectItem>
+                      ))}
+                    </Select>
+                    <Button isLoading={isLoading}  spinnerPlacement="end" size="lg" color="primary" type="submit" className="min-w-32 rounded self-end">
+                      Search
+                    </Button>
             </Form>
-        </PageActions>
+          </PageActions>
         </div>
         <Divider/>
         <div className="flex  justify-between">

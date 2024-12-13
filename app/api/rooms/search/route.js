@@ -19,10 +19,19 @@ export async function GET(req) {
     return new  Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
   }
 
+  const roomResources = resources && resources.length > 0 ? 
+    {
+      some: {
+        resourceId: { in: resources },
+      },
+    }
+   : {};
+
   try {
     const availableRooms = await prisma.room.findMany({
         where: {
           capacity: { gte: parseInt(capacity) },
+          AND: {roomResources: roomResources},
           schedules: {
             none: {
               AND: [
@@ -35,11 +44,6 @@ export async function GET(req) {
               ]
             },
           },
-          roomResources: {
-            some: {
-              resourceId: { in: resources },
-            },
-        },
       },
       include: {
         roomResources: {

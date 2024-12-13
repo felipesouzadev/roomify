@@ -14,7 +14,7 @@ export default function Topmenu() {
         <Navbar shouldHideOnScroll isBordered maxWidth="full">
           <NavbarContent  justify="start" >
             <NavbarBrand >
-              <p className="font-bold text-inherit">ROOMIFY</p>
+              <p className="font-bold text-primary">ROOMIFY</p>
             </NavbarBrand>
           </NavbarContent>
           <NavbarContent as="div" justify="end">

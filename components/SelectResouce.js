@@ -43,6 +43,7 @@ export default function SelectResources({ availableResources, availableTypes, se
             <div className="flex flex-row">
             <div className="flex flex-row justify-start items-start w-full h-10 gap-2" key={`resource-${index}`}>
                 <Autocomplete
+                size="sm"
                 inputValue={selectedResource.name}
                 color="primary"
                 id="select-resource"
@@ -59,6 +60,7 @@ export default function SelectResources({ availableResources, availableTypes, se
               ))}
               </Autocomplete>
               <Select
+               size="lm"
                color="primary"
                value={selectedResource.type}
                selectedKeys={selectedResource.type ? [selectedResource.type] : []}
@@ -71,6 +73,7 @@ export default function SelectResources({ availableResources, availableTypes, se
               </Select>
               {selectedResource.type === 'QUANTITY' && (
                 <Input
+                  size="lm"
                   color="secondary"
                   type="number"
                   value={selectedResource.value}

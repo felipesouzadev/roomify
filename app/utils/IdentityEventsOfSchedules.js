@@ -11,7 +11,7 @@ export default async function IdentifyEventsOfSchedules(schedules, start, end) {
         const shiftTimes = shiftTimeMapping[schedule.shift];
 
         let currentDate = new Date(start);
-        while (currentDate <= end) {
+        while (currentDate <= end && currentDate <= schedule.endDate) {
           if (scheduleWeekday.includes(currentDate.getDay())) {
             const eventStart = new Date(currentDate);
             eventStart.setHours(shiftTimes.startHour, 0, 0, 0);
@@ -25,7 +25,8 @@ export default async function IdentifyEventsOfSchedules(schedules, start, end) {
               title,
               start: eventStart,
               end: eventEnd,
-              allDay: false
+              allDay: false,
+              resourceId: `room${schedule.room.id}-teacher${schedule.teacher.id}`,
             });
           }
           currentDate.setDate(currentDate.getDate() + 1);

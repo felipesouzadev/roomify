@@ -166,7 +166,7 @@ export default function Users() {
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
               Cancel
             </Button>
-            <Button color="warning" auto onClick={handleDeleteUser}>
+            <Button color="danger" auto onClick={handleDeleteUser}>
               Delete
             </Button>
           </ModalFooter>

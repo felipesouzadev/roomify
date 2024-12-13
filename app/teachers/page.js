@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-        Button, Input, Spacer,
-        useDisclosure
+        Button, Input, Spacer, useDisclosure, Skeleton
        } from "@nextui-org/react";
 import {
         Modal, 
@@ -23,6 +22,7 @@ function Teachers() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onOpenChange: onOpenDeleteChange} = useDisclosure();
   const [currentTeacher, setCurrentTeacher] = useState({ id: null, name: "", subject: "", contact: "" });
+  const [isLoaded, setIsLoaded] = useState(false);
 
 
   const handleOpenModal = (teacher = { id: null, name: "", subject: "", contact: "" }) => {
@@ -31,18 +31,26 @@ function Teachers() {
   };
 
   const handleDeleteTeacher = async () => {
-    await axios.delete(`/api/teachers/${currentTeacher.id}`);
-    setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.id !== currentTeacher.id));
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
-    onOpenDeleteChange();
+    try {
+      await axios.delete(`/api/teachers/${currentTeacher.id}`);
+      setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.id !== currentTeacher.id));
+      setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
+      onOpenDeleteChange();
+    } catch (error){
+      alert('Error deleting teacher');
+    }
   }
 
   const handleEditTeacher = async () => {
-    const response = await axios.put(`/api/teachers/${currentTeacher.id}`, currentTeacher);
-    const updatedTeacher = response.data;
-    setTeachers((prevTeachers) => prevTeachers.map((teacher) => (teacher.id === updatedTeacher.id ? updatedTeacher : teacher)));
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
-    onOpenChange();
+    try{
+      const response = await axios.put(`/api/teachers/${currentTeacher.id}`, currentTeacher);
+      const updatedTeacher = response.data;
+      setTeachers((prevTeachers) => prevTeachers.map((teacher) => (teacher.id === updatedTeacher.id ? updatedTeacher : teacher)));
+      setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
+      onOpenChange();
+    } catch (error) {
+      alert('Error updating teacher');
+    }
   }
 
   const handleOpenDeleteModal = (teacher) => {
@@ -52,15 +60,22 @@ function Teachers() {
 
   useEffect(() => {
     axios.get('/api/teachers')
-      .then((response) => setTeachers(response.data));
+      .then((response) => {
+        setTeachers(response.data)
+        setIsLoaded(true);
+      });
   }, []);
 
   const handleAddTeacher = async () => {
-    const response = await axios.post('/api/teachers', currentTeacher);
-    const addedTeacher = response.data;
-    setTeachers((prevTeachers) => [...prevTeachers, addedTeacher]);
-    setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
-    onOpenChange();
+    try {
+      const response = await axios.post('/api/teachers', currentTeacher);
+      const addedTeacher = response.data;
+      setTeachers((prevTeachers) => [...prevTeachers, addedTeacher]);
+      setCurrentTeacher({ id: null, name: "", subject: "", contact: "" });
+      onOpenChange();
+    } catch (error) {
+      alert('Error adding teacher');
+    }
   };
 
   return (
@@ -71,6 +86,7 @@ function Teachers() {
         </Button>
       </PageActions>
       <Spacer y={1} />
+      <Skeleton isLoaded={isLoaded}>
       <Table isStriped classNames={{wrapper: "bg-background", th: "text-primary", td: "text-primary", tr: "even:"}}>
         <TableHeader>
           <TableColumn>Name</TableColumn>
@@ -106,6 +122,7 @@ function Teachers() {
           ))}
         </TableBody>
       </Table>
+      </Skeleton>
 
       <Modal
           isOpen={isOpen}
@@ -171,7 +188,7 @@ function Teachers() {
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
               Cancel
             </Button>
-            <Button color="warning" auto onClick={handleDeleteTeacher}>
+            <Button color="danger" auto onClick={handleDeleteTeacher}>
               Delete
             </Button>
           </ModalFooter>

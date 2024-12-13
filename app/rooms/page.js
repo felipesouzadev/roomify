@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-        Button, Input, Spacer, useDisclosure } from "@nextui-org/react";
+        Button, Input, Spacer, useDisclosure, Skeleton } from "@nextui-org/react";
 import { Modal,  ModalContent,  ModalHeader,  ModalBody,  ModalFooter } from "@nextui-org/modal";
 import PageActions from '../../components/PageActions'
 import PageWrapper from '../../components/PageWrapper'
@@ -17,6 +17,7 @@ export default function Rooms() {
   const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onOpenChange: onOpenDeleteChange} = useDisclosure();
   const [currentRoom, setCurrentRoom] = useState({ id: null, name: "", capacity: "" });
   const [selectedResources, setSelectedResources] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   
 
   const deleteResource = (index) => {
@@ -25,19 +26,27 @@ export default function Rooms() {
   }
 
   const handleDeleteRoom = async () => {
-    await axios.delete(`/api/rooms/${currentRoom.id}`);
-    setRooms((prevRooms) => prevRooms.filter((room) => room.id !== currentRoom.id));
-    setCurrentRoom({ id: null, name: "", capacity: "" });
-    onOpenDeleteChange();
+    try{
+      await axios.delete(`/api/rooms/${currentRoom.id}`);
+      setRooms((prevRooms) => prevRooms.filter((room) => room.id !== currentRoom.id));
+      setCurrentRoom({ id: null, name: "", capacity: "" });
+      onOpenDeleteChange();
+    } catch (error) {
+      alert("Error deleting room");
+    }
   }
 
   const handleEditRoom = async () => {
-    currentRoom.resources = selectedResources;
-    const response = await axios.put(`/api/rooms/${currentRoom.id}`, currentRoom);
-    const updatedRoom = response.data;
-    setRooms((prevRooms) => prevRooms.map((room) => (room.id === updatedRoom.id ? updatedRoom : room)));
-    setCurrentRoom({ id: null, name: "", capacity: "" });
-    onOpenChange();
+    try {
+      currentRoom.resources = selectedResources;
+      const response = await axios.put(`/api/rooms/${currentRoom.id}`, currentRoom);
+      const updatedRoom = response.data;
+      setRooms((prevRooms) => prevRooms.map((room) => (room.id === updatedRoom.id ? updatedRoom : room)));
+      setCurrentRoom({ id: null, name: "", capacity: "" });
+      onOpenChange();
+    } catch (error) {
+      alert("Error updating room");
+    }
   }
 
   const handleOpenDeleteModal = (room) => {
@@ -56,16 +65,23 @@ export default function Rooms() {
 
   useEffect(() => {
     axios.get('/api/rooms')
-      .then((response) => setRooms(response.data));
+      .then((response) => {
+        setRooms(response.data);
+        setIsLoaded(true);
+      });
   }, []);
 
   const handleAddRoom = async () => {
-    currentRoom.resources = selectedResources;
-    const response = await axios.post('/api/rooms', currentRoom);
-    const addedRoom = response.data;
-    setRooms((prevRooms) => [...prevRooms, addedRoom]);
-    setCurrentRoom({ id: null, name: "", capacity: "" });
-    onOpenChange();
+    try {
+      currentRoom.resources = selectedResources;
+      const response = await axios.post('/api/rooms', currentRoom);
+      const addedRoom = response.data;
+      setRooms((prevRooms) => [...prevRooms, addedRoom]);
+      setCurrentRoom({ id: null, name: "", capacity: "" });
+      onOpenChange();
+    } catch(error) {
+      alert("Error creating room");
+    }
   };
   
   return (
@@ -75,7 +91,8 @@ export default function Rooms() {
           Create Room
         </Button>
       </PageActions>
-      <Table isStriped classNames={{wrapper: "bg-background", th: "text-primary text-bold font-lg", td: "text-primary"}}>
+      <Skeleton isLoaded={isLoaded}>
+      <Table layout="fixed" isStriped classNames={{wrapper: "bg-background", th: "text-primary text-bold font-lg", td: "text-primary"}}>
         <TableHeader>
           <TableColumn>Room Name</TableColumn>
           <TableColumn>Capacity</TableColumn>
@@ -108,6 +125,8 @@ export default function Rooms() {
           ))}
         </TableBody>
       </Table>
+      </Skeleton>
+
 
       <Modal
           isOpen={isOpen}
@@ -166,7 +185,7 @@ export default function Rooms() {
             <Button auto flat color="error" onClick={onOpenDeleteChange}>
               Cancel
             </Button>
-            <Button color="warning" auto onClick={handleDeleteRoom}>
+            <Button color="danger" auto onClick={handleDeleteRoom}>
               Delete
             </Button>
           </ModalFooter>

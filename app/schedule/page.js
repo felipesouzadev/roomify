@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Card } from "@nextui-org/react";
+import { Card, Select, SelectItem, Switch } from "@nextui-org/react";
 import axios from "axios"
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";

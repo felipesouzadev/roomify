@@ -1,4 +1,4 @@
-import {divider, nextui} from '@nextui-org/theme'
+import {nextui} from '@nextui-org/theme'
 
 const lightTheme = {
   colors: {
@@ -20,13 +20,6 @@ const darkTheme = {
   },
 };
 
-const nextUiTheme = {
-  themes: {
-    dark: darkTheme,
-    light: lightTheme,
-  }
-}
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -36,8 +29,7 @@ export default {
   ],
   plugins: [nextui({
     themes: {
-      light: lightTheme,
-      dark: darkTheme,
+      light: lightTheme
     }
   })],
   darkMode: "class",

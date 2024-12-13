@@ -24,6 +24,8 @@ export default function LoginForm() {
           if (!response?.error) {
             router.push('/');
             router.refresh();
+          } else {
+            alert('Error signing in check your credentials');
           }
     }
 
